@@ -1,20 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:movies_development/model/SearchResponse.dart';
 import 'package:movies_development/movies/movies_details_screen.dart';
 
-import '../model/MovieResponse.dart';
 import '../myTheme.dart';
 
 class MoviesItem extends StatelessWidget {
-  MovieResponse movies;
+  Result result;
 
-  MoviesItem({required this.movies});
+  MoviesItem({required this.result});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => Navigator.of(context)
-          .pushNamed(MoviesDetailsScreen.routeName, arguments: movies),
+          .pushNamed(MoviesDetailsScreen.routeName, arguments: result),
       child: Container(
         padding: EdgeInsets.all(15),
         child: Column(
@@ -25,7 +25,7 @@ class MoviesItem extends StatelessWidget {
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(18)),
               child: CachedNetworkImage(
-                imageUrl: movies.urlToImage ?? "",
+                imageUrl:"https://image.tmdb.org/t/p/w500"+result.posterPath!,
                 placeholder: (context, url) => Center(
                     child: CircularProgressIndicator(
                   color: Theme.of(context).primaryColor,
@@ -37,7 +37,7 @@ class MoviesItem extends StatelessWidget {
               height: 10,
             ),
             Text(
-              movies.author ?? "",
+              result.title??"",
               style: Theme.of(context)
                   .textTheme
                   .titleSmall!
@@ -46,13 +46,13 @@ class MoviesItem extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Text(movies.title ?? "",
+            Text(result.originalLanguage ?? "",
                 style: Theme.of(context).textTheme.titleMedium),
             SizedBox(
               height: 10,
             ),
             Text(
-              movies.publishedAt ?? "",
+              result.releaseDate ?? "",
               style: Theme.of(context)
                   .textTheme
                   .titleSmall!

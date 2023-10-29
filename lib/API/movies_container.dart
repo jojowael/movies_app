@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_development/API/api_manager.dart';
+import 'package:movies_development/model/SearchResponse.dart';
 import 'package:movies_development/movies/movies_items.dart';
 
 import '../model/MovieResponse.dart';
@@ -12,7 +13,7 @@ class MoviesContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<MovieResponse?>(
+    return FutureBuilder<SearchResponse?>(
         future: ApiManager.searchMovies(movieName),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -29,18 +30,18 @@ class MoviesContainer extends StatelessWidget {
               ],
             );
           }
-          // if (snapshot.data?.status != 'ok') {
-          //   return Column(
-          //     children: [
-          //       Text(snapshot.data?.message ?? ""),
-          //       ElevatedButton(onPressed: () {}, child: Text('Try Again'))
-          //     ],
-          //   );
-          // }
-          var movieList = snapshot.data?.results ?? [];
+          if (snapshot.data?.success == false) {
+            return Column(
+              children: [
+                Text(snapshot.data?.status_message ?? ""),
+                ElevatedButton(onPressed: () {}, child: Text('Try Again'))
+              ],
+            );
+          }
+          List<Result> movieList = snapshot.data?.results ?? [];
           return ListView.builder(
             itemBuilder: (context, index) {
-              return MoviesItem(movies: movieList[index]);
+              return MoviesItem(result: movieList[index]);
             },
             itemCount: movieList.length,
           );
